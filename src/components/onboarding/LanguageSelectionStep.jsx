@@ -3,62 +3,15 @@ import {useNavigate} from 'react-router-dom';
 
 // Data for languages with associated flags/icons (simplified for demonstration)
 // Using country flags for languages closely tied to a country, otherwise a generic icon
-const languages = [
-  { id: 'HI', name: 'Hindi', native: 'हिंदी', code: 'HI', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'EN', name: 'English', native: 'English', code: 'EN', countryCode: 'gb', flag: 'https://flagcdn.com/w40/gb.png' },
-  { id: 'PA', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', code: 'PA', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'ES', name: 'Spanish', native: 'Española', code: 'ES', countryCode: 'es', flag: 'https://flagcdn.com/w40/es.png' },
-  { id: 'FR', name: 'French', native: 'Français', code: 'FR', countryCode: 'fr', flag: 'https://flagcdn.com/w40/fr.png' },
-  { id: 'JA', name: 'Japanese', native: '日本語', code: 'JA', countryCode: 'jp', flag: 'https://flagcdn.com/w40/jp.png' },
-  { id: 'ZH', name: 'Chinese', native: '汉语', code: 'ZH', countryCode: 'cn', flag: 'https://flagcdn.com/w40/cn.png' },
-  { id: 'DE', name: 'German', native: 'Deutsch', code: 'DE', countryCode: 'de', flag: 'https://flagcdn.com/w40/de.png' },
-  { id: 'AR', name: 'Arabic', native: 'العربية', code: 'AR', countryCode: 'sa', flag: 'https://flagcdn.com/w40/sa.png' },
-  { id: 'RU', name: 'Russian', native: 'Русский', code: 'RU', countryCode: 'ru', flag: 'https://flagcdn.com/w40/ru.png' },
-  { id: 'PT', name: 'Portuguese', native: 'Português', code: 'PT', countryCode: 'pt', flag: 'https://flagcdn.com/w40/pt.png' },
-  { id: 'IT', name: 'Italian', native: 'Italiano', code: 'IT', countryCode: 'it', flag: 'https://flagcdn.com/w40/it.png' },
-  { id: 'KO', name: 'Korean', native: '한국어', code: 'KO', countryCode: 'kr', flag: 'https://flagcdn.com/w40/kr.png' },
-  { id: 'BN', name: 'Bengali', native: 'বাংলা', code: 'BN', countryCode: 'bd', flag: 'https://flagcdn.com/w40/bd.png' },
-  { id: 'NL', name: 'Dutch', native: 'Nederlands', code: 'NL', countryCode: 'nl', flag: 'https://flagcdn.com/w40/nl.png' },
-  { id: 'UR', name: 'Urdu', native: 'اردو', code: 'UR', countryCode: 'pk', flag: 'https://flagcdn.com/w40/pk.png' },
-  { id: 'TE', name: 'Telugu', native: 'తెలుగు', code: 'TE', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'ML', name: 'Malayalam', native: 'മലയാളം', code: 'ML', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'KN', name: 'Kannada', native: 'ಕನ್ನಡ', code: 'KN', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'MR', name: 'Marathi', native: 'मराठी', code: 'MR', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'GU', name: 'Gujarati', native: 'ગુજરાતી', code: 'GU', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'SD', name: 'Sindhi', native: 'سنڌي‎', code: 'SD', countryCode: 'pk', flag: 'https://flagcdn.com/w40/pk.png' },
-  { id: 'TA', name: 'Tamil', native: 'தமிழ்', code: 'TA', countryCode: 'in', flag: 'https://flagcdn.com/w40/in.png' },
-  { id: 'SV', name: 'Swedish', native: 'Svenska', code: 'SV', countryCode: 'se', flag: 'https://flagcdn.com/w40/se.png' },
-  { id: 'NO', name: 'Norwegian', native: 'Norsk', code: 'NO', countryCode: 'no', flag: 'https://flagcdn.com/w40/no.png' },
-  { id: 'DA', name: 'Danish', native: 'Dansk', code: 'DA', countryCode: 'dk', flag: 'https://flagcdn.com/w40/dk.png' },
-  { id: 'FI', name: 'Finnish', native: 'Suomi', code: 'FI', countryCode: 'fi', flag: 'https://flagcdn.com/w40/fi.png' },
-  { id: 'PL', name: 'Polish', native: 'Polski', code: 'PL', countryCode: 'pl', flag: 'https://flagcdn.com/w40/pl.png' },
-  { id: 'TR', name: 'Turkish', native: 'Türkçe', code: 'TR', countryCode: 'tr', flag: 'https://flagcdn.com/w40/tr.png' },
-  { id: 'EL', name: 'Greek', native: 'Ελληνικά', code: 'EL', countryCode: 'gr', flag: 'https://flagcdn.com/w40/gr.png' },
-  { id: 'HE', name: 'Hebrew', native: 'עברית', code: 'HE', countryCode: 'il', flag: 'https://flagcdn.com/w40/il.png' },
-  { id: 'VI', name: 'Vietnamese', native: 'Tiếng Việt', code: 'VI', countryCode: 'vn', flag: 'https://flagcdn.com/w40/vn.png' },
-  { id: 'TH', name: 'Thai', native: 'ไทย', code: 'TH', countryCode: 'th', flag: 'https://flagcdn.com/w40/th.png' },
-  { id: 'ID', name: 'Indonesian', native: 'Bahasa Indonesia', code: 'ID', countryCode: 'id', flag: 'https://flagcdn.com/w40/id.png' },
-  { id: 'MS', name: 'Malay', native: 'Bahasa Melayu', code: 'MS', countryCode: 'my', flag: 'https://flagcdn.com/w40/my.png' },
-  { id: 'RO', name: 'Romanian', native: 'Română', code: 'RO', countryCode: 'ro', flag: 'https://flagcdn.com/w40/ro.png' },
-  { id: 'HU', name: 'Hungarian', native: 'Magyar', code: 'HU', countryCode: 'hu', flag: 'https://flagcdn.com/w40/hu.png' },
-  { id: 'CS', name: 'Czech', native: 'Čeština', code: 'CS', countryCode: 'cz', flag: 'https://flagcdn.com/w40/cz.png' },
-  { id: 'SK', name: 'Slovak', native: 'Slovenčina', code: 'SK', countryCode: 'sk', flag: 'https://flagcdn.com/w40/sk.png' },
-  { id: 'HR', name: 'Croatian', native: 'Hrvatski', code: 'HR', countryCode: 'hr', flag: 'https://flagcdn.com/w40/hr.png' },
-  { id: 'BG', name: 'Bulgarian', native: 'Български', code: 'BG', countryCode: 'bg', flag: 'https://flagcdn.com/w40/bg.png' },
-  { id: 'SR', name: 'Serbian', native: 'Cрпски', code: 'SR', countryCode: 'rs', flag: 'https://flagcdn.com/w40/rs.png' },
-  { id: 'UA', name: 'Ukrainian', native: 'Українська', code: 'UA', countryCode: 'ua', flag: 'https://flagcdn.com/w40/ua.png' },
-  { id: 'FA', name: 'Persian', native: 'فارسی', code: 'FA', countryCode: 'ir', flag: 'https://flagcdn.com/w40/ir.png' },
-  { id: 'AF', name: 'Afrikaans', native: 'Afrikaans', code: 'AF', countryCode: 'za', flag: 'https://flagcdn.com/w40/za.png' },
-  { id: 'SW', name: 'Swahili', native: 'Kiswahili', code: 'SW', countryCode: 'tz', flag: 'https://flagcdn.com/w40/tz.png' }
-];
-
+import languages from '../../assets/languages';
 
 // CreateAccountLanguage component for selecting language to learn
-function LanguageSelectionScreen() {
+function LanguageSelectionStep() {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [error, setError] = useState('');
 
   // Filter languages based on search query
   const filteredLanguages = languages.filter(language =>
@@ -67,8 +20,16 @@ function LanguageSelectionScreen() {
   );
 
   // Function to handle the "Start Learning" button click
-  const handleStartLearning = () => {
-    navigate("/level");
+  const handleNext = () => {
+    if (!selectedLanguage) {
+      setError('Please select a country.');
+      return;
+    }
+
+    // Clear error and proceed
+    setError('');
+    console.log(`Selected Language: ${selectedLanguage.name}`);
+    navigate('/onboarding/language-level');
   };
 
   return (
@@ -83,7 +44,7 @@ function LanguageSelectionScreen() {
           stroke="currentColor"
           className="w-6 h-6 text-gray-700 cursor-pointer"
           aria-label="Go back"
-          onClick={() => navigate("/location")}
+          onClick={() => navigate("/onboarding/location")}
         >
           <path
             strokeLinecap="round"
@@ -196,10 +157,11 @@ function LanguageSelectionScreen() {
           background: #555;
         }
       `}</style>
-
-      {/* Start Learning Button */}
+      {/* Error Message */}
+      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
+      {/* Next Button */}
       <button
-        onClick={handleStartLearning}
+        onClick={handleNext}
         className="w-full bg-yellow-500 text-white font-semibold py-3 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-300 mt-6"
       >
         Next
@@ -208,4 +170,4 @@ function LanguageSelectionScreen() {
   );
 }
 
-export default LanguageSelectionScreen;
+export default LanguageSelectionStep;
