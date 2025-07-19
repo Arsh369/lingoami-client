@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { updateStep, setUserId } from '../../store/onboardingSlice';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
-const AccountNameEmailStep = () => {
-  const navigate = useNavigate();
+import axios from 'axios';
 
-  // Form state
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-  });
+const AccountNameEmailStep = () => {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { firstName, lastName, email } = useSelector(state => state.onboarding);
 
   // Error state
   const [errors, setErrors] = useState({});
 
-  // Handle input change
-  const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
-    setErrors((prev) => ({ ...prev, [field]: '' })); // Clear error on change
-  };
-
-  // Simple email regex
+  // Email regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  // Validation logic
+  // Input change handler
+  const handleChange = (field) => (e) => {
+    dispatch(updateStep({ [field]: e.target.value }));
+    setErrors((prev) => ({ ...prev, [field]: '' }));
+  };
+
+  // Validation
   const validate = () => {
     const newErrors = {};
-
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!formData.email.trim()) {
+    if (!firstName.trim()) newErrors.firstName = 'First name is required';
+    if (!lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!emailRegex.test(formData.email)) {
+    } else if (!emailRegex.test(email)) {
       newErrors.email = 'Invalid email format';
     }
 
@@ -39,24 +38,20 @@ const AccountNameEmailStep = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle next
-  const handleNext = async (e) => {
+  // Handle Next
+  const handleNext = async () => {
     if (!validate()) return;
 
-    e.preventDefault();
-
     try {
-      // Replace with your backend URL
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step1`, {
-        ...formData,
-        step: 1
-      });
-
-      // Save user ID to localStorage or context to use in next steps
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/step1`,
+        { firstName, lastName, email }
+      );
+      localStorage.setItem("firstName", firstName);
       const userId = response.data.userId;
-      localStorage.setItem('userId', userId);
+      dispatch(setUserId(userId));
+      localStorage.setItem('userId', userId); // optional
 
-      // Redirect to step 2
       navigate('/onboarding/gender');
     } catch (error) {
       console.error('Registration error:', error);
@@ -66,21 +61,14 @@ const AccountNameEmailStep = () => {
 
   return (
     <div className="w-full max-w-md bg-white rounded-xl p-6 sm:p-8 mx-auto">
-      {/* Back Arrow */}
+      {/* Back Button */}
       <div className="mb-6">
         <button
           aria-label="Go back"
           onClick={() => navigate(-1)}
           className="text-gray-700 hover:text-gray-900 transition"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-6 h-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </button>
@@ -115,12 +103,11 @@ const AccountNameEmailStep = () => {
       <form className="space-y-4 mb-8" onSubmit={(e) => e.preventDefault()}>
         {/* First Name */}
         <div>
-          <label htmlFor="firstName" className="sr-only">First Name</label>
           <input
             id="firstName"
             type="text"
             placeholder="First Name"
-            value={formData.firstName}
+            value={firstName}
             onChange={handleChange('firstName')}
             className={`w-full px-4 py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
               errors.firstName
@@ -136,12 +123,11 @@ const AccountNameEmailStep = () => {
 
         {/* Last Name */}
         <div>
-          <label htmlFor="lastName" className="sr-only">Last Name</label>
           <input
             id="lastName"
             type="text"
             placeholder="Last Name"
-            value={formData.lastName}
+            value={lastName}
             onChange={handleChange('lastName')}
             className={`w-full px-4 py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
               errors.lastName
@@ -157,12 +143,11 @@ const AccountNameEmailStep = () => {
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="sr-only">Email</label>
           <input
             id="email"
             type="email"
             placeholder="Email"
-            value={formData.email}
+            value={email}
             onChange={handleChange('email')}
             className={`w-full px-4 py-3 text-sm border rounded-lg focus:outline-none focus:ring-2 ${
               errors.email

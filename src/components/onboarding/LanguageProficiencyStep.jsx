@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { updateStep } from '../../store/onboardingSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 const LanguageProficiencyStep = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [error, setError] = useState('');
+
+  const onboarding = useSelector((state) => state.onboarding);
+  const userId = onboarding.userId || localStorage.getItem('userId');
+  const selectedLevel = onboarding.proficiencyLevel || null;
+  const selectedLanguage = onboarding.selectedLanguage?.name || 'English';
 
   const proficiencyLevels = [
     { id: 'A1', label: 'A1', description: 'Beginner', level: 1 },
@@ -22,10 +32,9 @@ const LanguageProficiencyStep = () => {
     'bg-orange-600',
   ];
 
-  const [selectedLevel, setSelectedLevel] = useState(null);
-
   const handleLevelSelect = (levelId) => {
-    setSelectedLevel(levelId);
+    dispatch(updateStep({ proficiencyLevel: levelId }));
+    setError('');
   };
 
   const handleConfirm = async (e) => {
@@ -36,21 +45,45 @@ const LanguageProficiencyStep = () => {
       return;
     }
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      alert('User ID not found. Please restart registration.');
+    if (!userId || userId === "undefined" || userId === "null") {
+      setError('User ID not found. Please restart registration.');
+      console.error('Missing or invalid userId:', userId);
       return;
     }
 
     try {
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+      // Debug logging
+      console.log('=== PROFICIENCY SAVE DEBUG ===');
+      console.log('User ID:', userId);
+      console.log('Selected Level:', selectedLevel);
+      console.log('Selected Language:', selectedLanguage);
+      console.log('Full Redux State:', onboarding);
+      
+      const payload = {
         proficiency: selectedLevel,
+        language: selectedLanguage, // Include language if needed
         step: 7
-      });
-      navigate('/'); // or the main app screen
+      };
+      
+      console.log('API Payload:', payload);
+      console.log('API URL:', `${import.meta.env.VITE_BACKEND_URL}/api/auth/step7/${userId}`);
+
+      // Changed from step6 to step7 to match the actual step
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/step7/${userId}`, payload);
+      
+      console.log('API Response:', response.data);
+      console.log('=== END DEBUG ===');
+      
+      // Navigate to main app or completion screen
+      navigate('/'); 
     } catch (error) {
-      console.error('Error saving proficiency:', error);
-      alert('Failed to save proficiency. Try again.');
+      console.error('=== API ERROR ===');
+      console.error('Error details:', error);
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('=== END ERROR ===');
+      
+      setError(`Failed to save proficiency: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -77,9 +110,9 @@ const LanguageProficiencyStep = () => {
         <span className="text-4xl font-bold text-yellow-500">LB</span>
       </div>
 
-      {/* Step Title */}
+      {/* Step Title - Show actual language name */}
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-6">
-        What is your level in ___?
+        What is your level in {selectedLanguage}?
       </h1>
 
       {/* Step Progress Indicator */}
@@ -131,6 +164,13 @@ const LanguageProficiencyStep = () => {
           </div>
         ))}
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded-lg">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
+      )}
 
       {/* Confirm Button */}
       <div className="mt-6 mb-4">

@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from "axios";
+import { updateStep } from '../../store/onboardingSlice'; // ✅ Import action
+
 const AccountGenderSelectionStep = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [selectedGender, setSelectedGender] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = React.useState('');
+  const { userId, gender } = useSelector((state) => state.onboarding); // ✅ Access Redux
 
   const genderOptions = [
     { label: 'Female', icon: '/images/female.png', fallback: 'F' },
@@ -14,13 +18,12 @@ const AccountGenderSelectionStep = () => {
   ];
 
   const handleConfirm = async (e) => {
-    if (!selectedGender) {
+    e.preventDefault();
+
+    if (!gender) {
       setError('Please select your gender to proceed.');
       return;
     }
-    setError('');
-    e.preventDefault();
-    const userId = localStorage.getItem('userId');
 
     if (!userId) {
       alert('User ID not found. Please restart registration.');
@@ -28,12 +31,12 @@ const AccountGenderSelectionStep = () => {
     }
 
     try {
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
-        gender: selectedGender,
+      console.log(gender)
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/step2/${userId}`, {
+        gender,
         step: 2
       });
 
-      // Navigate to Step 3 (date of birth)
       navigate('/onboarding/date-of-birth');
     } catch (error) {
       console.error('Error updating gender:', error);
@@ -41,9 +44,14 @@ const AccountGenderSelectionStep = () => {
     }
   };
 
+  const handleGenderSelect = (selected) => {
+    dispatch(updateStep({ gender: selected })); // ✅ Update Redux
+    setError('');
+  };
+
   return (
     <div className="w-full max-w-md bg-white rounded-lg p-6 sm:p-8">
-      {/* Back Arrow */}
+      {/* Back */}
       <div className="flex justify-start mb-6">
         <svg
           onClick={() => navigate('/onboarding/account-info')}
@@ -53,23 +61,19 @@ const AccountGenderSelectionStep = () => {
           viewBox="0 0 24 24"
           strokeWidth={2}
           stroke="currentColor"
-          aria-label="Go back"
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
         </svg>
       </div>
 
-      {/* Logo */}
       <div className="flex justify-center mb-8">
         <span className="text-4xl font-bold text-yellow-500">LB</span>
       </div>
 
-      {/* Title */}
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-6">
         Create your Account
       </h1>
 
-      {/* Stepper */}
       <div className="flex justify-center items-center mb-8">
         {[1, 2, 3, 4, 5, 6, 7].map((step) => (
           <React.Fragment key={step}>
@@ -83,22 +87,17 @@ const AccountGenderSelectionStep = () => {
         ))}
       </div>
 
-      {/* Question */}
       <h2 className="text-xl font-semibold text-gray-800 text-center mb-6">
         What is your gender?
       </h2>
 
-      {/* Options */}
       <div className="space-y-4 mb-4 text-sm">
         {genderOptions.map(({ label, icon, fallback }) => (
           <div
             key={label}
-            onClick={() => {
-              setSelectedGender(label);
-              setError('');
-            }}
+            onClick={() => handleGenderSelect(label)}
             className={`flex items-center justify-between p-4 border rounded-lg cursor-pointer transition
-              ${selectedGender === label ? 'border-yellow-500 bg-yellow-50' : 'border-gray-300 bg-white hover:bg-gray-50'}`}
+              ${gender === label ? 'border-yellow-500 bg-yellow-50' : 'border-gray-300 bg-white hover:bg-gray-50'}`}
           >
             <div className="flex items-center space-x-3">
               <img
@@ -112,7 +111,7 @@ const AccountGenderSelectionStep = () => {
               />
               <span className="text-gray-800 font-medium">{label}</span>
             </div>
-            {selectedGender === label && (
+            {gender === label && (
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-6 h-6 text-yellow-500">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
               </svg>
@@ -121,14 +120,12 @@ const AccountGenderSelectionStep = () => {
         ))}
       </div>
 
-      {/* Error Message */}
       {error && (
         <p className="text-red-500 text-sm mb-4 text-center">
           {error}
         </p>
       )}
 
-      {/* Confirm Button */}
       <button
         onClick={handleConfirm}
         className="w-full bg-yellow-500 text-white font-semibold py-3 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition duration-300"

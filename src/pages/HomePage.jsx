@@ -1,6 +1,16 @@
 import React from 'react';
+import { useState, useEffect} from 'react';
 
 const Home = () => {
+
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    // Fetch from localStorage (or from Redux, or API)
+    const name = localStorage.getItem('firstName');
+    setUserName(name || 'User'); // fallback to 'User' if not found
+  }, []);
+
   return (
     <div className="min-h-screen bg-white flex flex-col font-inter">
       {/* Top Navigation Bar */}
@@ -37,7 +47,7 @@ const Home = () => {
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center justify-start p-6 text-center">
         {/* Welcome Message */}
-        <h1 className="text-2xl font-semibold mt-4 mb-8">Welcome, Amit Singh</h1>
+        <h1 className="text-2xl font-semibold mt-4 mb-8">Welcome, {userName}</h1>
 
         {/* Active Users Section */}
         <div className="flex flex-col items-center justify-center mb-8">

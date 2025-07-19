@@ -10,6 +10,7 @@ const AccountPasswordStep = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  // Password validation checks
   const isValidLength = password.length >= 8;
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
@@ -23,15 +24,17 @@ const AccountPasswordStep = () => {
 
   const handleNext = async (e) => {
     e.preventDefault();
+
     const userId = localStorage.getItem('userId');
 
-        if (!userId) {
+    if (!userId || userId === "undefined" || userId === "null") {
       alert('User ID not found. Please restart registration.');
+      console.error('Missing or invalid userId in localStorage:', userId);
       return;
     }
 
     try {
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step4/${userId}`, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/step4/${userId}`, {
         password,
         step: 4
       });

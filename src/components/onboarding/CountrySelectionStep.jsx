@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-
-// Data for countries with actual flag image URLs (using countryflags.io for demonstration)
-// In a production app, you might consider self-hosting these or using a more robust flag library.
 import countries from '../../assets/countries';
+import { updateStep } from '../../store/onboardingSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 const CountrySelectionStep = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState(null);
   const [error, setError] = useState('');
+
+  const onboarding = useSelector((state) => state.onboarding);
+  const userId = onboarding.userId || localStorage.getItem("userId");
+  const selectedCountry = onboarding.selectedCountry || null;
 
   const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleCountrySelection = (country) => {
+    dispatch(updateStep({ selectedCountry: country }));
+    setError('');
+  };
 
   const handleNext = async (e) => {
     e.preventDefault();
@@ -25,19 +32,15 @@ const CountrySelectionStep = () => {
       return;
     }
 
-    // Clear error and proceed
-    setError('');
-    const userId = localStorage.getItem('userId');
-
-    if (!userId) {
-      alert('User ID not found. Please restart registration.');
+    if (!userId || userId === "undefined" || userId === "null") {
+      setError('User ID not found. Please restart registration.');
+      console.error('Missing or invalid userId:', userId);
       return;
     }
-
-    
+ 
     try {
       console.log(`Selected Country: ${selectedCountry.name}`);
-      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/step5/${userId}`, {
         country: selectedCountry.name,
         step: 5
       });
@@ -45,7 +48,7 @@ const CountrySelectionStep = () => {
       navigate('/onboarding/language');
     } catch (error) {
       console.error('Error saving country:', error);
-      alert('Failed to save country. Try again.');
+      setError('Failed to save country. Please try again.');
     }
   };
 
@@ -116,7 +119,7 @@ const CountrySelectionStep = () => {
           filteredCountries.map(country => (
             <div
               key={country.code}
-              onClick={() => setSelectedCountry(country)}
+              onClick={() => handleCountrySelection(country)}
               className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer transition ${
                 selectedCountry?.code === country.code
                   ? 'border-yellow-500 bg-yellow-50'
