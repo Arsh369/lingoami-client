@@ -12,13 +12,13 @@ import LanguageProficiencyStep from '../components/onboarding/LanguageProficienc
 const OnboardingRoutes = () => {
   return (
     <Routes>
-      <Route path="/onboarding/account-info" element={<AccountNameEmailStep />} />
-      <Route path="/onboarding/gender" element={<AccountGenderSelectionStep />} />
-      <Route path="/onboarding/date-of-birth" element={<AccountDateOfBirthStep />} />
-      <Route path="/onboarding/password" element={<AccountPasswordStep />} />
-      <Route path="/onboarding/location" element={<CountrySelectionStep />} />
-      <Route path="/onboarding/language" element={<LanguageSelectionStep />} />
-      <Route path="/onboarding/language-level" element={<LanguageProficiencyStep />} />
+      <Route path="/account-info" element={<AccountNameEmailStep />} />
+      <Route path="/gender" element={<AccountGenderSelectionStep />} />
+      <Route path="/date-of-birth" element={<AccountDateOfBirthStep />} />
+      <Route path="/password" element={<AccountPasswordStep />} />
+      <Route path="/location" element={<CountrySelectionStep />} />
+      <Route path="/language" element={<LanguageSelectionStep />} />
+      <Route path="/proficiency" element={<LanguageProficiencyStep />} />
     </Routes>
   );
 };

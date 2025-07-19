@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 // Data for countries with actual flag image URLs (using countryflags.io for demonstration)
 // In a production app, you might consider self-hosting these or using a more robust flag library.
 import countries from '../../assets/countries';
+import axios from 'axios';
 
 const CountrySelectionStep = () => {
   const navigate = useNavigate();
@@ -16,7 +17,9 @@ const CountrySelectionStep = () => {
     country.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleNext = () => {
+  const handleNext = async (e) => {
+    e.preventDefault();
+    
     if (!selectedCountry) {
       setError('Please select a country.');
       return;
@@ -24,9 +27,26 @@ const CountrySelectionStep = () => {
 
     // Clear error and proceed
     setError('');
-    console.log(`Selected Country: ${selectedCountry.name}`);
+    const userId = localStorage.getItem('userId');
 
-    navigate('/onboarding/language');
+    if (!userId) {
+      alert('User ID not found. Please restart registration.');
+      return;
+    }
+
+    
+    try {
+      console.log(`Selected Country: ${selectedCountry.name}`);
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+        country: selectedCountry.name,
+        step: 5
+      });
+
+      navigate('/onboarding/language');
+    } catch (error) {
+      console.error('Error saving country:', error);
+      alert('Failed to save country. Try again.');
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios'
 const AccountNameEmailStep = () => {
   const navigate = useNavigate();
 
@@ -40,14 +40,28 @@ const AccountNameEmailStep = () => {
   };
 
   // Handle next
-  const handleNext = () => {
+  const handleNext = async (e) => {
     if (!validate()) return;
 
-    console.log('First Name:', formData.firstName);
-    console.log('Last Name:', formData.lastName);
-    console.log('Email:', formData.email);
+    e.preventDefault();
 
-    navigate('/onboarding/gender');
+    try {
+      // Replace with your backend URL
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step1`, {
+        ...formData,
+        step: 1
+      });
+
+      // Save user ID to localStorage or context to use in next steps
+      const userId = response.data.userId;
+      localStorage.setItem('userId', userId);
+
+      // Redirect to step 2
+      navigate('/onboarding/gender');
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Failed to register. Please try again.');
+    }
   };
 
   return (

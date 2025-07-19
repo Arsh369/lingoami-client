@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axios from "axios";
 const LanguageProficiencyStep = () => {
   const navigate = useNavigate();
 
@@ -28,12 +28,30 @@ const LanguageProficiencyStep = () => {
     setSelectedLevel(levelId);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async (e) => {
+    e.preventDefault();
+
     if (!selectedLevel) {
-      alert('Please select your language level to proceed.');
+      setError('Please select your proficiency level.');
       return;
     }
-    navigate("/")
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('User ID not found. Please restart registration.');
+      return;
+    }
+
+    try {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+        proficiency: selectedLevel,
+        step: 7
+      });
+      navigate('/'); // or the main app screen
+    } catch (error) {
+      console.error('Error saving proficiency:', error);
+      alert('Failed to save proficiency. Try again.');
+    }
   };
 
   return (

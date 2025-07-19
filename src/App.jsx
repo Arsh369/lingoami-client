@@ -5,9 +5,9 @@ import Home from './pages/HomePage';
 function App() {
   return (
     <Router>
-      <OnboardingRoutes />
       <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/onboarding/*" element={<OnboardingRoutes />} />
       </Routes>
     </Router>
   );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import axios from "axios";
 const AccountGenderSelectionStep = () => {
   const navigate = useNavigate();
 
@@ -13,14 +13,32 @@ const AccountGenderSelectionStep = () => {
     { label: 'Other', icon: '/images/lgbtq.png', fallback: 'O' }
   ];
 
-  const handleConfirm = () => {
+  const handleConfirm = async (e) => {
     if (!selectedGender) {
       setError('Please select your gender to proceed.');
       return;
     }
     setError('');
-    console.log('Selected Gender:', selectedGender);
-    navigate('/onboarding/date-of-birth');
+    e.preventDefault();
+    const userId = localStorage.getItem('userId');
+
+    if (!userId) {
+      alert('User ID not found. Please restart registration.');
+      return;
+    }
+
+    try {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+        gender: selectedGender,
+        step: 2
+      });
+
+      // Navigate to Step 3 (date of birth)
+      navigate('/onboarding/date-of-birth');
+    } catch (error) {
+      console.error('Error updating gender:', error);
+      alert('Failed to save gender. Try again.');
+    }
   };
 
   return (

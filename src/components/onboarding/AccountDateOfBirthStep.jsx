@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
 // Step 3 of account creation - Date of Birth Selection
 const AccountDateOfBirthStep = () => {
   const navigate = useNavigate();
@@ -10,21 +10,40 @@ const AccountDateOfBirthStep = () => {
   const [error, setError] = useState("");
 
   // Proceed to next step after validating input
-  const handleNext = () => {
+  const handleNext = async (e) => {
+    e.preventDefault();
+
     if (!dateOfBirth) {
       setError("Please select your date of birth.");
       return;
     }
 
-    console.log("Selected Date of Birth:", dateOfBirth);
-    navigate("/onboarding/password");
+    const userId = localStorage.getItem("userId");
+
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`,
+        {
+          dateOfBirth,
+          step: 3,
+        }
+      );
+
+      navigate("/onboarding/password");
+    } catch (error) {
+      console.error("Error saving date of birth:", error);
+      alert("Failed to save date of birth. Try again.");
+    }
   };
 
   return (
     <div className="w-full max-w-md bg-white rounded-lg p-6 sm:p-8">
       {/* Back Navigation */}
       <div className="flex justify-start mb-6">
-        <button onClick={() => navigate("/onboarding/gender")} aria-label="Go back">
+        <button
+          onClick={() => navigate("/onboarding/gender")}
+          aria-label="Go back"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -33,7 +52,11 @@ const AccountDateOfBirthStep = () => {
             stroke="currentColor"
             className="w-6 h-6 text-gray-700"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"
+            />
           </svg>
         </button>
       </div>
@@ -54,7 +77,11 @@ const AccountDateOfBirthStep = () => {
           <React.Fragment key={step}>
             <div
               className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold
-                ${step === 3 ? "bg-yellow-500 text-white" : "bg-gray-200 text-gray-600"}`}
+                ${
+                  step === 3
+                    ? "bg-yellow-500 text-white"
+                    : "bg-gray-200 text-gray-600"
+                }`}
             >
               {step}
             </div>

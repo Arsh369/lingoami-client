@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const AccountPasswordStep = () => {
   const navigate = useNavigate();
@@ -20,9 +21,25 @@ const AccountPasswordStep = () => {
 
   const toggleShowPassword = () => setShowPassword((prev) => !prev);
 
-  const handleNext = () => {
-    if (isFormValid) {
-      navigate("/onboarding/location");
+  const handleNext = async (e) => {
+    e.preventDefault();
+    const userId = localStorage.getItem('userId');
+
+        if (!userId) {
+      alert('User ID not found. Please restart registration.');
+      return;
+    }
+
+    try {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step4/${userId}`, {
+        password,
+        step: 4
+      });
+
+      navigate('/onboarding/location');
+    } catch (error) {
+      console.error('Error saving password:', error);
+      alert('Failed to save password. Try again.');
     }
   };
 

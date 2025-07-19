@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-
+import axios from "axios";
 // Data for languages with associated flags/icons (simplified for demonstration)
 // Using country flags for languages closely tied to a country, otherwise a generic icon
 import languages from '../../assets/languages';
@@ -20,18 +20,33 @@ function LanguageSelectionStep() {
   );
 
   // Function to handle the "Start Learning" button click
-  const handleNext = () => {
+  const handleNext = async (e) => {
+    e.preventDefault();
+
     if (!selectedLanguage) {
-      setError('Please select a country.');
+      setError('Please select a language to continue.');
       return;
     }
 
-    // Clear error and proceed
     setError('');
-    console.log(`Selected Language: ${selectedLanguage.name}`);
-    navigate('/onboarding/language-level');
-  };
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('User ID not found. Please restart registration.');
+      return;
+    }
 
+    try {
+      await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register/step/${userId}`, {
+        language: selectedLanguage.name,
+        step: 6
+      });
+
+      navigate('/onboarding/proficiency');
+    } catch (error) {
+      console.error('Error saving language:', error);
+      alert('Failed to save language. Try again.');
+    }
+  };
   return (
     <div className="w-full max-w-md bg-white rounded-lg  p-6 sm:p-8 flex flex-col h-screen">
       {/* Back arrow icon */}
