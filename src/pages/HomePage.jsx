@@ -1,14 +1,16 @@
-import React from 'react';
-import { useState, useEffect} from 'react';
+import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
 
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
 
   useEffect(() => {
     // Fetch from localStorage (or from Redux, or API)
-    const name = localStorage.getItem('firstName');
-    setUserName(name || 'User'); // fallback to 'User' if not found
+    const name = localStorage.getItem("firstName");
+    setUserName(name || "User"); // fallback to 'User' if not found
   }, []);
 
   return (
@@ -47,7 +49,10 @@ const Home = () => {
       {/* Main Content */}
       <main className="flex-grow flex flex-col items-center justify-start p-6 text-center">
         {/* Welcome Message */}
-        <h1 className="text-2xl font-semibold mt-4 mb-8">Welcome, {userName}</h1>
+        <h1 className="text-2xl font-semibold mt-4 mb-8">
+          Welcome,{" "}
+          {userName.charAt(0).toUpperCase() + userName.slice(1).toLowerCase()}
+        </h1>
 
         {/* Active Users Section */}
         <div className="flex flex-col items-center justify-center mb-8">
@@ -57,25 +62,39 @@ const Home = () => {
               className="w-12 h-12 rounded-full border-2 border-white object-cover"
               src="https://placehold.co/48x48/F7B731/FFFFFF?text=User1"
               alt="User 1"
-              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/48x48/F7B731/FFFFFF?text=User1"; }}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  "https://placehold.co/48x48/F7B731/FFFFFF?text=User1";
+              }}
             />
             <img
               className="w-12 h-12 rounded-full border-2 border-white object-cover"
               src="https://placehold.co/48x48/F7B731/FFFFFF?text=User2"
               alt="User 2"
-              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/48x48/F7B731/FFFFFF?text=User2"; }}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  "https://placehold.co/48x48/F7B731/FFFFFF?text=User2";
+              }}
             />
             <img
               className="w-12 h-12 rounded-full border-2 border-white object-cover"
               src="https://placehold.co/48x48/F7B731/FFFFFF?text=User3"
               alt="User 3"
-              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/48x48/F7B731/FFFFFF?text=User3"; }}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  "https://placehold.co/48x48/F7B731/FFFFFF?text=User3";
+              }}
             />
             <div className="w-12 h-12 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-sm font-semibold text-gray-700">
               +10
             </div>
           </div>
-          <p className="ml-4 text-gray-600 text-sm">10+ Others are active now</p>
+          <p className="ml-4 text-gray-600 text-sm">
+            10+ Others are active now
+          </p>
         </div>
 
         {/* Tagline */}
@@ -84,7 +103,7 @@ const Home = () => {
         </p>
 
         {/* Start Chatting Button */}
-        <button className="flex items-center justify-center px-8 py-3 bg-yellow-500 text-white font-bold text-lg rounded-full shadow-lg hover:bg-yellow-600 transition duration-300 ease-in-out">
+        <button className="flex items-center justify-center px-8 py-3 bg-yellow-500 text-white font-bold text-lg rounded shadow-lg hover:bg-yellow-600 transition duration-300 ease-in-out">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 mr-2"
@@ -156,7 +175,10 @@ const Home = () => {
           </svg>
           <span className="text-xs mt-1">Chats</span>
         </div>
-        <div className="flex flex-col items-center text-gray-500">
+        <div
+          onClick={() => navigate("/profile")}
+          className="flex flex-col items-center text-gray-500 cursor-pointer"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

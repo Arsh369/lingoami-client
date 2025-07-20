@@ -4,6 +4,7 @@ import OnboardingRoutes from './pages/OnboardingPage';
 import Home from './pages/HomePage';
 import SignUpPage from './pages/SignUpPage';
 import SignInPage from './pages/SignInPage';
+import ProfilePage from './pages/ProfilePage';
 function App() {
   return (
     <Router>
@@ -12,6 +13,7 @@ function App() {
       <Route path='/signup' element={<SignUpPage />} />
       <Route path='/signin' element={<SignInPage />} />
       <Route path="/onboarding/*" element={<OnboardingRoutes />} />
+      <Route path='/profile' element={<ProfilePage />} />
       </Routes>
     </Router>
   );
