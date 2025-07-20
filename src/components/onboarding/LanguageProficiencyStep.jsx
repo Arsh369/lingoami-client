@@ -12,7 +12,25 @@ const LanguageProficiencyStep = () => {
   const onboarding = useSelector((state) => state.onboarding);
   const userId = onboarding.userId || localStorage.getItem('userId');
   const selectedLevel = onboarding.proficiencyLevel || null;
-  const selectedLanguage = onboarding.selectedLanguage?.name || 'English';
+  
+  // Get language name from localStorage first, fallback to Redux state
+  const getSelectedLanguage = () => {
+    const storedLanguage = localStorage.getItem('selectedLanguage');
+    if (storedLanguage) {
+      try {
+        // If it's stored as JSON object
+        const parsedLanguage = JSON.parse(storedLanguage);
+        return parsedLanguage.name || parsedLanguage;
+      } catch (e) {
+        // If it's stored as plain string
+        return storedLanguage;
+      }
+    }
+    // Fallback to Redux state
+    return onboarding.selectedLanguage?.name || 'English';
+  };
+  
+  const selectedLanguage = getSelectedLanguage();
 
   const proficiencyLevels = [
     { id: 'A1', label: 'A1', description: 'Beginner', level: 1 },
