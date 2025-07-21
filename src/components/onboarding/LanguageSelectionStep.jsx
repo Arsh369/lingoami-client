@@ -38,7 +38,7 @@ function LanguageSelectionStep() {
         language: selectedLanguage.name,
         step: 6
       });
-      localStorage.setItem('selectedLanguage', selectedLanguage.name);
+      localStorage.setItem('language', selectedLanguage.name);
       navigate('/onboarding/proficiency');
     } catch (error) {
       console.error('Error saving language:', error);

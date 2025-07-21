@@ -15,7 +15,7 @@ const LanguageProficiencyStep = () => {
   
   // Get language name from localStorage first, fallback to Redux state
   const getSelectedLanguage = () => {
-    const storedLanguage = localStorage.getItem('selectedLanguage');
+    const storedLanguage = localStorage.getItem('language');
     if (storedLanguage) {
       try {
         // If it's stored as JSON object
@@ -82,7 +82,7 @@ const LanguageProficiencyStep = () => {
         language: selectedLanguage, // Include language if needed
         step: 7
       };
-      
+      localStorage.setItem('proficiency', selectedLevel);
       console.log('API Payload:', payload);
       console.log('API URL:', `${import.meta.env.VITE_BACKEND_URL}/api/auth/step7/${userId}`);
 

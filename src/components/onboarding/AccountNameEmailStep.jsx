@@ -50,8 +50,10 @@ const AccountNameEmailStep = () => {
       localStorage.setItem("firstName", firstName);
       const userId = response.data.userId;
       dispatch(setUserId(userId));
-      localStorage.setItem('userId', userId); // optional
-
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('email', email);
+      localStorage.setItem('firstName', firstName);
+      localStorage.setItem('lastName', lastName);
       navigate('/onboarding/gender');
     } catch (error) {
       console.error('Registration error:', error);

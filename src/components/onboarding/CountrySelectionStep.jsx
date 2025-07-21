@@ -44,7 +44,8 @@ const CountrySelectionStep = () => {
         country: selectedCountry.name,
         step: 5
       });
-
+      localStorage.setItem('country', selectedCountry.name);
+      localStorage.setItem("countryCode", selectedCountry.code);
       navigate('/onboarding/language');
     } catch (error) {
       console.error('Error saving country:', error);

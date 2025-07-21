@@ -10,6 +10,7 @@ const initialState = {
   dateOfBirth: '',
   password: '',
   country: '',
+  countryCode: '',
   language: '',
   proficiency: ''
 };
