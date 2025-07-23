@@ -90,6 +90,7 @@ const LanguageProficiencyStep = () => {
       const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/auth/step7/${userId}`, payload);
       
       console.log('API Response:', response.data);
+      localStorage.setItem("token", response.data.token);
       console.log('=== END DEBUG ===');
       
       // Navigate to main app or completion screen

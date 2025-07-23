@@ -9,6 +9,7 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingPage from "./pages/SettingPage";
+import ChatPage from "./pages/ChatPage";
 // Load localStorage → Redux
 function SyncFromLocalStorage() {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function App() {
           <Route path="/onboarding/*" element={<OnboardingRoutes />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/setting/*" element={<SettingPage />} />
+          <Route path="/chat/:userId" element={<ChatPage />} />
         </Routes>
       </Router>
     </Provider>
