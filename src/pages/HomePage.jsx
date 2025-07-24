@@ -105,8 +105,9 @@ const Home = () => {
         </p>
 
         {/* Start Chatting Button */}
-        <button className="flex items-center justify-center px-8 py-3 bg-yellow-500 text-white font-bold text-lg rounded shadow-lg hover:bg-yellow-600 transition duration-300 ease-in-out">
+        <button className="flex items-center justify-center cursor-pointer px-8 py-3 bg-yellow-500 text-white font-bold text-lg rounded shadow-lg hover:bg-yellow-600 transition duration-300 ease-in-out">
           <svg
+
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 mr-2"
             fill="none"
@@ -126,7 +127,7 @@ const Home = () => {
 
       {/* Bottom Navigation Bar */}
       <nav className="flex justify-around items-center p-4 bg-white border-t border-gray-200">
-        <div className="flex flex-col items-center text-yellow-500">
+        <div className="flex flex-col items-center text-yellow-500 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -143,7 +144,7 @@ const Home = () => {
           </svg>
           <span className="text-xs mt-1">Home</span>
         </div>
-        <div className="flex flex-col items-center text-gray-500">
+        <div className="flex flex-col items-center text-gray-500 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
@@ -160,7 +161,9 @@ const Home = () => {
           </svg>
           <span className="text-xs mt-1">Video</span>
         </div>
-        <div className="flex flex-col items-center text-gray-500">
+        <div 
+        onClick={() => navigate("/chat")}
+        className="flex flex-col items-center text-gray-500 cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"

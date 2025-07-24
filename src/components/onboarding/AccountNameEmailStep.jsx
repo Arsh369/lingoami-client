@@ -47,7 +47,6 @@ const AccountNameEmailStep = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/step1`,
         { firstName, lastName, email }
       );
-      localStorage.setItem("firstName", firstName);
       const userId = response.data.userId;
       dispatch(setUserId(userId));
       localStorage.setItem('userId', userId);

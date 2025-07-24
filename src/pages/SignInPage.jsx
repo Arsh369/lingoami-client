@@ -19,7 +19,7 @@ const SignInPage = () => {
       console.log("Login success:", response.data);
 
       // Optional: store token or navigate
-      // localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.token);
       navigate("/");
 
     } catch (error) {

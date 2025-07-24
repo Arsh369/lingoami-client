@@ -54,7 +54,7 @@ function App() {
           <Route path="/onboarding/*" element={<OnboardingRoutes />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/setting/*" element={<SettingPage />} />
-          <Route path="/chat/:userId" element={<ChatPage />} />
+          <Route path="/chat" element={<ChatPage />} />
         </Routes>
       </Router>
     </Provider>
