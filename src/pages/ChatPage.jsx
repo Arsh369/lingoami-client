@@ -4,8 +4,10 @@ import socket from "../socket";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import ChatBox from "../components/ChatBox";
+import { useNavigate } from "react-router-dom";
 
 const ChatPage = () => {
+  const navigate = useNavigate();
   const userId = useSelector((state) => state.onboarding.userId);
   const [allUsers, setAllUsers] = useState([]);
   const [currentChatUser, setCurrentChatUser] = useState(null);
@@ -60,9 +62,14 @@ const ChatPage = () => {
         {/* Header */}
         <div className="bg-white p-4 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-3">
+            <div
+              onClick={() => navigate("/")}
+              className="flex items-center space-x-3"
+            >
               <div className="w-10 h-10 bg-orange-400 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">dL8h</span>
+                <span className="text-white font-bold text-lg cursor-pointer">
+                  LB
+                </span>
               </div>
             </div>
             <button className="text-gray-600 hover:text-gray-800">

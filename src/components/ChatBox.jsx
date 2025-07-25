@@ -1,11 +1,19 @@
 // components/ChatBox.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useRef } from "react";
 import socket from "../socket";
 import axios from "axios";
 
 const ChatBox = ({ currentChatUser, userId, onBack }) => {
+  const scrollRef = useRef(null);
   const [messages, setMessages] = useState([]);
   const [newMsg, setNewMsg] = useState("");
+
+  useEffect(() => {
+    // Scroll to the last message when messages change
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
 
   // 💬 Load chat messages
   useEffect(() => {
@@ -183,6 +191,7 @@ const ChatBox = ({ currentChatUser, userId, onBack }) => {
         {(() => {
           let lastDate = null;
           return messages.map((msg, i) => {
+            const isLastMessage = i === messages.length - 1;
             const messageDate = msg.createdAt
               ? new Date(msg.createdAt)
               : new Date();
@@ -200,19 +209,22 @@ const ChatBox = ({ currentChatUser, userId, onBack }) => {
                     </span>
                   </div>
                 )}
+
                 <div
                   className={`flex ${
                     msg.from === userId ? "justify-end" : "justify-start"
                   }`}
+                  ref={isLastMessage ? scrollRef : null}
                 >
                   <div
-                    className={`max-w-[70%] p-3 rounded-lg shadow-sm ${
+                    className={`w-fit max-w-[280px] p-3 rounded-lg shadow-sm break-words ${
                       msg.from === userId
                         ? "bg-orange-400 text-white rounded-br-sm"
                         : "bg-white text-gray-800 rounded-bl-sm"
                     }`}
                   >
                     <p className="text-sm">{msg.message}</p>
+
                     <div className="flex items-center justify-end mt-1 space-x-1">
                       <span
                         className={`text-xs ${
