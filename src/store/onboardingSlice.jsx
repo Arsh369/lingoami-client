@@ -26,6 +26,15 @@ const onboardingSlice = createSlice({
       state.userId = action.payload;
     },
     resetOnboarding(state) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userId");
+      localStorage.removeItem("firstName");
+      localStorage.removeItem("email");
+      localStorage.removeItem("lastName");
+      localStorage.removeItem("country");
+      localStorage.removeItem("countryCode");
+      localStorage.removeItem("language");
+      localStorage.removeItem("proficiency");
       return initialState;
     }
   }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
-import countries from '../../assets/countries';
+import countries from "../../../../shared/countries.json";
 import { updateStep } from '../../store/onboardingSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';

@@ -1,10 +1,12 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { resetOnboarding } from '../store/onboardingSlice';
 
 const Home = () => {
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
@@ -12,6 +14,11 @@ const Home = () => {
     const name = localStorage.getItem("firstName");
     setUserName(name || "User"); // fallback to 'User' if not found
   }, []);
+
+  const handleLogout = () => {
+  dispatch(resetOnboarding());
+  navigate('/signin');
+};
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-inter">
@@ -123,6 +130,7 @@ const Home = () => {
           </svg>
           Start Chatting
         </button>
+        <button className="cursor-pointer px-8 py-3 bg-red-500 text-white font-bold text-lg rounded shadow-lg hover:bg-red-600 transition duration-300 ease-in-out" onClick={handleLogout}>Logout</button>
       </main>
 
       {/* Bottom Navigation Bar */}

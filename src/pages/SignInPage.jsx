@@ -18,8 +18,16 @@ const SignInPage = () => {
 
       console.log("Login success:", response.data);
 
-      // Optional: store token or navigate
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("firstName", response.data.firstName);
+      localStorage.setItem("email", response.data.email);
+      localStorage.setItem("lastName", response.data.lastName);
+      localStorage.setItem("country", response.data.country);
+      localStorage.setItem("countryCode", response.data.countryCode);
+      localStorage.setItem("language", response.data.language);
+      localStorage.setItem("proficiency", response.data.proficiency);
+
       navigate("/");
 
     } catch (error) {
