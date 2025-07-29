@@ -10,6 +10,7 @@ import SignInPage from "./pages/SignInPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingPage from "./pages/SettingPage";
 import ChatPage from "./pages/ChatPage";
+import VideoCall from "./components/VidoeCall";
 // Load localStorage → Redux
 function SyncFromLocalStorage() {
   const dispatch = useDispatch();
@@ -55,6 +56,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/setting/*" element={<SettingPage />} />
           <Route path="/chat" element={<ChatPage />} />
+          <Route path="/video-call/:targetUserId/:userId" element={<VideoCall />} />
         </Routes>
       </Router>
     </Provider>
