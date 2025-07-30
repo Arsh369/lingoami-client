@@ -76,10 +76,15 @@ const VideoCall = () => {
     };
 
     pc.ontrack = (event) => {
-      const [remoteStream] = event.streams;
+      console.log("Received remote track");
+      const remoteStream = event.streams[0];
       if (remoteVideoRef.current && remoteStream) {
         remoteVideoRef.current.srcObject = remoteStream;
-        remoteVideoRef.current.play().catch(err => console.error("Playback error:", err));
+        remoteVideoRef.current.onloadedmetadata = () => {
+          remoteVideoRef.current.play().catch(err => {
+            console.error("Remote play error:", err);
+          });
+        };
       }
     };
 
